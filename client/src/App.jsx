@@ -28,11 +28,11 @@ const App = () => {
        <Route path='/bike-details/:id' element={<BikeDetails/>}/>
        <Route path='/bikes' element={<Bikes/>}/>
        <Route path='/my-bookings' element={<MyBookings/>}/>
-       <Route path='/Owner' element={<Layout/>}>
+       <Route path='/owner' element={<Layout/>}>  
         <Route index element={<Dashboard/>}/>
         <Route path='add-bike' element={<AddBike/>}/>
-        <Route path='manage-bike' element={<ManageBikes/>}/>
-        <Route path='manage-booking' element={<ManageBooking/>}/> 
+        <Route path='manage-bikes' element={<ManageBikes/>}/>
+        <Route path='manage-bookings' element={<ManageBooking/>}/> 
        </Route>
      </Routes>
 

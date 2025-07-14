@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Title = ({title,subTitle}) => {
+const OwnerTitle = ({title,subTitle}) => {
   return (
     <>
     <h1 className='font-medium text-3xl'>{title}</h1>
@@ -9,4 +9,4 @@ const Title = ({title,subTitle}) => {
   )
 }
 
-export default Title
+export default OwnerTitle

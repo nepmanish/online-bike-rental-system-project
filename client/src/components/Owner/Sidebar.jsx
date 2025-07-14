@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { assets, dummyBikeData, ownerMenuLinks } from '../../assets/assets';
+import { assets,dummyUserData, ownerMenuLinks } from '../../assets/assets';
 import { NavLink, useLocation } from 'react-router-dom';
 
 function Sidebar() {
-    const user = dummyBikeData;
+    const user = dummyUserData;
     const location = useLocation();
     const [image, setImage] = useState('');
     const linkpath = location.pathname;

@@ -105,7 +105,7 @@ export const ownerMenuLinks = [
 
 export const dummyUserData = {
   "_id": "6847f7cab3d8daecdb517095",
-  "name": "GreatStack",
+  "name": "DummyOwner",
   "email": "admin@example.com",
   "role": "owner",
   "image": user_profile,
@@ -185,29 +185,29 @@ export const dummyBikeData = [
 export const dummyMyBookingsData = [
     {
         "_id": "68482bcc98eb9722b7751f70",
-        "car": dummyBikeData[0],
+        "bike": dummyBikeData[0],
         "user": "6847f7cab3d8daecdb517095",
         "owner": "6847f7cab3d8daecdb517095",
         "pickupDate": "2025-06-13T00:00:00.000Z",
         "returnDate": "2025-06-14T00:00:00.000Z",
         "status": "confirmed",
-        "price": 440,
+        "price": 1200,
         "createdAt": "2025-06-10T12:57:48.244Z",
     },
     {
         "_id": "68482bb598eb9722b7751f60",
-        "car": dummyBikeData[1],
+        "bike": dummyBikeData[1],
         "user": "6847f7cab3d8daecdb517095",
         "owner": "67fe3467ed8a8fe17d0ba6e2",
         "pickupDate": "2025-06-12T00:00:00.000Z",
         "returnDate": "2025-06-12T00:00:00.000Z",
         "status": "pending",
-        "price": 130,
+        "price": 1000,
         "createdAt": "2025-06-10T12:57:25.613Z",
     },
     {
         "_id": "684800fa0fb481c5cfd92e56",
-        "car": dummyBikeData[2],
+        "bike": dummyBikeData[2],
         "user": "6847f7cab3d8daecdb517095",
         "owner": "67fe3467ed8a8fe17d0ba6e2",
         "pickupDate": "2025-06-11T00:00:00.000Z",
@@ -218,7 +218,7 @@ export const dummyMyBookingsData = [
     },
     {
         "_id": "6847fe790fb481c5cfd92d94",
-        "car": dummyBikeData[3],
+        "bike": dummyBikeData[3],
         "user": "6847f7cab3d8daecdb517095",
         "owner": "6847f7cab3d8daecdb517095",
         "pickupDate": "2025-06-11T00:00:00.000Z",
@@ -230,7 +230,7 @@ export const dummyMyBookingsData = [
 ]
 
 export const dummyDashboardData = {
-    "totalCars": 4,
+    "totalBikes": 4,
     "totalBookings": 2,
     "pendingBookings": 0,
     "completedBookings": 2,
