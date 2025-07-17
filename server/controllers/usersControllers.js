@@ -1,6 +1,7 @@
 const User = require('../models/usersModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const { recommend } = require('../utils/recommend');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -84,3 +85,16 @@ exports.deleteUser = (_req, res) => {
     message: 'route not defined',
   });
 };
+
+exports.recommendBikes = catchAsync(async (req, res, next) => {
+    const bikes = await recommend(req.user.id);
+
+  res.status(200).json({
+    status: 'success',
+    results: bikes.length,
+    data: bikes,
+  });
+});
+
+
+

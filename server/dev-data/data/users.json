@@ -1,0 +1,222 @@
+[
+  {
+    "name": "Alice Sharma",
+    "email": "alice.sharma@example.com",
+    "password": "securepass1",
+    "passwordConfirm": "securepass1",
+    "preferences": {
+      "price": 2000,
+      "engineCC": 155,
+      "weight": 142
+    }
+  },
+  {
+    "name": "Ramesh Karki",
+    "email": "ramesh.karki@example.com",
+    "password": "passcode22",
+    "passwordConfirm": "passcode22",
+    "preferences": {
+      "price": 1400,
+      "engineCC": 124,
+      "weight": 115
+    }
+  },
+  {
+    "name": "Sneha Thapa",
+    "email": "sneha.thapa@example.com",
+    "password": "thapapass33",
+    "passwordConfirm": "thapapass33",
+    "preferences": {
+      "price": 2700,
+      "engineCC": 199,
+      "weight": 160
+    }
+  },
+  {
+    "name": "Kiran Bista",
+    "email": "kiran.bista@example.com",
+    "password": "kbista44",
+    "passwordConfirm": "kbista44",
+    "preferences": {
+      "price": 1300,
+      "engineCC": 97,
+      "weight": 112
+    }
+  },
+  {
+    "name": "Meena Joshi",
+    "email": "meena.joshi@example.com",
+    "password": "mjpass55",
+    "passwordConfirm": "mjpass55",
+    "preferences": {
+      "price": 2300,
+      "engineCC": 197,
+      "weight": 149
+    }
+  },
+  {
+    "name": "Prakash Giri",
+    "email": "prakash.giri@example.com",
+    "password": "giri0077",
+    "passwordConfirm": "giri0077",
+    "preferences": {
+      "price": 3500,
+      "engineCC": 349,
+      "weight": 195
+    }
+  },
+  {
+    "name": "Anjali Malla",
+    "email": "anjali.malla@example.com",
+    "password": "mallaPass8",
+    "passwordConfirm": "mallaPass8",
+    "preferences": {
+      "price": 5000,
+      "engineCC": 321,
+      "weight": 169
+    }
+  },
+  {
+    "name": "Deepak Gurung",
+    "email": "deepak.gurung@example.com",
+    "password": "dgSecure99",
+    "passwordConfirm": "dgSecure99",
+    "preferences": {
+      "price": 2500,
+      "engineCC": 199,
+      "weight": 159
+    }
+  },
+  {
+    "name": "Pooja Singh",
+    "email": "pooja.singh@example.com",
+    "password": "poojaPass12",
+    "passwordConfirm": "poojaPass12",
+    "preferences": {
+      "price": 1500,
+      "engineCC": 124,
+      "weight": 122
+    }
+  },
+  {
+    "name": "Niraj Lama",
+    "email": "niraj.lama@example.com",
+    "password": "lama12345",
+    "passwordConfirm": "lama12345",
+    "preferences": {
+      "price": 1800,
+      "engineCC": 149,
+      "weight": 135
+    }
+  },
+  {
+    "name": "Kabita Chaudhary",
+    "email": "kabita.chaudhary@example.com",
+    "password": "kabitaPass1",
+    "passwordConfirm": "kabitaPass1",
+    "preferences": {
+      "price": 3000,
+      "engineCC": 373,
+      "weight": 184
+    }
+  },
+  {
+    "name": "Sunil Basnet",
+    "email": "sunil.basnet@example.com",
+    "password": "sunil2023",
+    "passwordConfirm": "sunil2023",
+    "preferences": {
+      "price": 2100,
+      "engineCC": 149,
+      "weight": 144
+    }
+  },
+  {
+    "name": "Sita Kharel",
+    "email": "sita.kharel@example.com",
+    "password": "skharel123",
+    "passwordConfirm": "skharel123",
+    "preferences": {
+      "price": 2800,
+      "engineCC": 249,
+      "weight": 151
+    }
+  },
+  {
+    "name": "Rajan Adhikari",
+    "email": "rajan.adhikari@example.com",
+    "password": "rajpass77",
+    "passwordConfirm": "rajpass77",
+    "preferences": {
+      "price": 4500,
+      "engineCC": 373,
+      "weight": 172
+    }
+  },
+  {
+    "name": "Neha Pandey",
+    "email": "neha.pandey@example.com",
+    "password": "nehaPass88",
+    "passwordConfirm": "nehaPass88",
+    "preferences": {
+      "price": 2000,
+      "engineCC": 159,
+      "weight": 145
+    }
+  },
+  {
+    "name": "Rupesh Thapa",
+    "email": "rupesh.thapa@example.com",
+    "password": "rupeshPass99",
+    "passwordConfirm": "rupeshPass99",
+    "preferences": {
+      "price": 1800,
+      "engineCC": 163,
+      "weight": 139
+    }
+  },
+  {
+    "name": "Binita Rai",
+    "email": "binita.rai@example.com",
+    "password": "raiSecure12",
+    "passwordConfirm": "raiSecure12",
+    "preferences": {
+      "price": 2200,
+      "engineCC": 220,
+      "weight": 163
+    }
+  },
+  {
+    "name": "Manoj KC",
+    "email": "manoj.kc@example.com",
+    "password": "kcmanojPass",
+    "passwordConfirm": "kcmanojPass",
+    "preferences": {
+      "price": 1800,
+      "engineCC": 162,
+      "weight": 140
+    }
+  },
+  {
+    "name": "Sarita Oli",
+    "email": "sarita.oli@example.com",
+    "password": "saritaOl1",
+    "passwordConfirm": "saritaOl1",
+    "preferences": {
+      "price": 3500,
+      "engineCC": 348,
+      "weight": 181
+    }
+  },
+  {
+    "name": "Govinda Bhatta",
+    "email": "govinda.bhatta@example.com",
+    "password": "govindaSecure",
+    "passwordConfirm": "govindaSecure",
+    "preferences": {
+      "price": 1600,
+      "engineCC": 124,
+      "weight": 120
+    }
+  }
+]

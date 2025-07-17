@@ -2,11 +2,12 @@ const Bike = require('../models/bikesModel');
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const { runClustering } = require('../utils/recluster');
 
 exports.aliasTopBikes = (req, res, next) => {
   req.query.limit = '5';
   req.query.sort = 'price,-ratingsAverage';
-  req.query.fields = 'name,price,difficulty,ratingsAverage,summary';
+  req.query.fields = 'name,price,ratingsAverage,summary';
   next();
 };
 
@@ -77,7 +78,7 @@ exports.getBikeStats = catchAsync(async (req, res, next) => {
     },
     {
       $group: {
-        _id: { $toUpper: '$difficulty' },
+        _id: { $toUpper: '$engineCC' },
         numTours: { $sum: 1 },
         numRatings: { $sum: '$ratingsQuantity' },
         avgRating: { $avg: '$ratingsAverage' },
@@ -99,3 +100,20 @@ exports.getBikeStats = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.reclusterBikes = async (req, res, next) => {
+  try {
+    const clusters = await runClustering(3);
+
+    res.status(200).json({
+      status: 'success',
+      message: `Reclustering completed. ${clusters} clusters formed.`,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to recluster bikes',
+      error: err.message,
+    });
+  }
+};

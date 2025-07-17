@@ -1,9 +1,9 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const Tour = require('../../models/toursModel');
+const User = require('../../models/usersModel');
 
-dotenv.config({ path: './config.env' });
+dotenv.config({ path: `${__dirname}/../../config.env` });
 
 const db = process.env.DATABASE.replace(
   '<db_password>',
@@ -13,26 +13,26 @@ mongoose.connect(db).then((con) => {
   console.log('db connection seccessfull');
 });
 
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/bikes.json`, 'utf-8'),
+const users = JSON.parse(
+  fs.readFileSync(`${__dirname}/users.json`, 'utf-8'),
 );
 
-//create tours
+//create Users
 const importData = async () => {
   try {
-    await Tour.create(tours);
-    console.log('tours created');
+    await User.create(users);
+    console.log('Users created');
   } catch (err) {
     console.log(err);
   }
   process.exit();
 };
 
-//delete tours
+//delete Users
 const deleteData = async () => {
   try {
-    await Tour.deleteMany();
-    console.log('tours deleted');
+    await User.deleteMany();
+    console.log('Users deleted');
   } catch (err) {
     console.log(err);
   }

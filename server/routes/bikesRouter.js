@@ -12,6 +12,9 @@ router
 
 router.route('/bike-stats').get(bikesControllers.getBikeStats);
 
+router.post('/recluster', authControllers.protect, authControllers.restrictedTo('admin'), bikesControllers.reclusterBikes);
+
+
 router
   .route('/')
   .get(authControllers.protect, bikesControllers.getAllBikes)

@@ -1,31 +1,28 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+
 // const validator = require('validator');
+
 
 const bikeSchema = mongoose.Schema(
   {
     name: {
       type: String,
       required: [true, 'Bike must have a name'],
-      unique: true,
+      // unique: true,
       trim: true,
       maxlength: [40, 'a Bike name must have max 40 length charecters'],
-      minlength: [10, 'a Bike name must have min 10 length charecters'],
-      // validate: [validator.isAlpha, 'Bike name should be letters only'],
     },
     slug: String,
-    duration: {
+    engineCC: {
       type: Number,
-      required: [true, 'a Bikes must have a duraion'],
+      required: [true, 'Bike must have engine cc'],
     },
-    difficulty: {
-      type: String,
-      required: [true, 'a Bike must have a difficulty'],
-      enum: {
-        values: ['easy', 'medium', 'difficult'],
-        message: 'difficulty is either easy, medium or difficult',
-      },
+    weight: {
+      type: Number,
+      require: [true, 'Bike must have weight'],
     },
+    clusterId: Number,
     ratingsAverage: {
       type: Number,
       default: 4.5,
@@ -60,7 +57,7 @@ const bikeSchema = mongoose.Schema(
     },
     imageCover: {
       type: String,
-      required: [true, 'a Bike must have a cover imgage'],
+      // required: [true, 'a Bike must have a cover imgage'],
     },
     images: [String],
     createdAt: {
@@ -79,8 +76,8 @@ const bikeSchema = mongoose.Schema(
   },
 );
 
-bikeSchema.virtual('durationWeeks').get(function () {
-  return this.duration / 7;
+bikeSchema.virtual('weightPounds').get(function () {
+  return this.weight * 2.2;
 });
 
 bikeSchema.pre('save', function (next) {
@@ -106,6 +103,8 @@ bikeSchema.pre('aggregate', function (next) {
   this.pipeline().unshift({ $match: { secretBike: { $ne: true } } });
   next();
 });
+
+
 const Bike = mongoose.model('Bike', bikeSchema);
 
 module.exports = Bike;

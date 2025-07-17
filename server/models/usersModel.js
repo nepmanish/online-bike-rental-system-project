@@ -46,6 +46,21 @@ const userSchema = new mongoose.Schema({
     default: true,
     select: false,
   },
+  preferences: {
+    price: {
+      type: Number,
+      required: [true, 'you must give your expected price of bike rental'],
+    },
+    engineCC: {
+      type: Number,
+      required: [true, 'you must give your favoured cc of bike'],
+    },
+    weight: {
+      type: Number,
+      required: [true, 'you must give you favoured weight of bike'],
+    },
+  },
+  clusterId: Number,
 });
 
 userSchema.pre('save', async function (next) {

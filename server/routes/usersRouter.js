@@ -16,14 +16,16 @@ router.patch(
 router.patch('/updateMe', authController.protect, usersController.updateMe);
 router.delete('/deleteMe', authController.protect, usersController.deleteMe);
 
+router.get('/recommend', authController.protect, usersController.recommendBikes);
+
 router
   .route('/')
-  .get(authController.protect, usersController.getAllUsers)
-  .post(usersController.createUser);
+  .get(authController.protect, authController.restrictedTo('admin'), usersController.getAllUsers)
+  .post(authController.protect, authController.restrictedTo('admin'), usersController.createUser);
 router
   .route('/:id')
-  .get(usersController.getUser)
-  .patch(usersController.updateUser)
-  .delete(usersController.deleteUser);
+  .get(authController.protect, authController.restrictedTo('admin'), usersController.getUser)
+  .patch(authController.protect, authController.restrictedTo('admin'), usersController.updateUser)
+  .delete(authController.protect, authController.restrictedTo('admin'), usersController.deleteUser);
 
 module.exports = router;
