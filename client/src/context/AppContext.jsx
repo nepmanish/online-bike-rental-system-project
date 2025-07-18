@@ -1,97 +1,106 @@
-import React from "react";
-import { createContext, useContext, useEffect } from "react";
-import { toast } from "react-hot-toast";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL
+axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+axios.defaults.withCredentials = false;          //  send the JWT in headers
+                                                  //    (backend’s protect() expects it)
 
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
+  const navigate = useNavigate();
+  const currency = import.meta.env.VITE_CURRENCY;
 
-    const navigate = useNavigate()
-    const currency = import.meta.env.VITE_CURRENCY
+  const [token, setToken]       = useState(null);
+  const [user,  setUser]        = useState(null);   // full user object
+  const [isOwner, setIsOwner]   = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
-    const [token, setToken] = React.useState(null)
-    const [user, setUser] = React.useState(null)
-    const [isOwner, setIsOwner] = React.useState(false)
-    const [showLogin, setShowLogin] = React.useState(false)
-    const [pickupDate, setPickupDate] = React.useState('')
-    const [returnDate, setReturnDate] = React.useState('')
+  // Booking‑flow states you already had
+  const [pickupDate, setPickupDate]   = useState('');
+  const [returnDate, setReturnDate]   = useState('');
+  const [bikes, setBikes]             = useState([]);
 
-    const [bikes, setBikes] = React.useState([])
+ 
+  const attachToken = (jwt) => {
+    axios.defaults.headers.common['authorization'] = `Bearer ${jwt}`;
+  };
 
-    //function to check if user is logged in
+    // Startup ‑ restore persisted session
 
-    const fetchUser = async () => {
-        try {
-            const {data} = await axios.get('/api/user/data')
-            if (data.success){
-                setUser(data.user)
-            setIsOwner(data.user.role === 'owner')
-            }else{
-                navigate('/')
-            }
-            
-        } catch (error) {
-           toast.error(error.message)
-        }
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    const storedUser  = localStorage.getItem('user');
+
+    if (storedToken) {
+      setToken(storedToken);
+      attachToken(storedToken);
     }
-    // function to fetch all bikes from the server
-
-    const fetchBikes = async () => {
-        try {
-            const {data} = await axios.get('/api/user/bikes')
-            data.success ? setBikes(data.bikes) : toast.error(data.message)
-        } catch (error) {
-            toast.error(error.message)
-        }
+    if (storedUser) {
+      const parsed = JSON.parse(storedUser);
+      setUser(parsed);
+      setIsOwner(parsed.role === 'owner');
     }
+    // You can still auto‑load bikes, etc.
+    fetchBikes().catch(() => {});
+  }, []);
 
-    //function to logout user
-
-    const logout = () => {
-        localStorage.removeItem('token')
-        setToken(null)
-        setUser(null)
-        setIsOwner(false)
-        axios.defaults.headers.common['authorization'] = ''
-        toast.success('Logout successful')
+  
+  //  API Calls
+   
+  const fetchBikes = async () => {
+    try {
+      const { data } = await axios.get('/api/user/bikes');   // keep your existing route
+      if (data.success) setBikes(data.bikes);
+      else toast.error(data.message);
+    } catch (err) {
+      toast.error(err.message);
     }
+  };
 
-    // useEffect to retrieve the token from localstorage
-    useEffect(() => {
-        const token = localStorage.getItem('token')
-            setToken(token)
-            fetchBikes()
-        
-    },[])
-    //useEffect to fetch user data when token is available
+  const saveSession = (jwt, userObj) => {
+    setToken(jwt);
+    setUser(userObj);
+    setIsOwner(userObj.role === 'owner');
 
-    useEffect(()=>{
-        if (token){
-            axios.defaults.headers.common['authorization'] = `${token}`
-            fetchUser()
-        }
+    localStorage.setItem('token', jwt);
+    localStorage.setItem('user', JSON.stringify(userObj));
 
-    },[token])
+    attachToken(jwt);
+  };
 
+  const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
 
+    setToken(null);
+    setUser(null);
+    setIsOwner(false);
 
-    const value = {
-        navigate,currency, axios,user,setUser,token,setToken, isOwner, setIsOwner, fetchUser, showLogin, setShowLogin,logout, fetchBikes, bikes, setBikes, pickupDate, setPickupDate, returnDate, setReturnDate
+    delete axios.defaults.headers.common['authorization'];
+    toast.success('Logout successful');
+    navigate('/');
+  };
 
+  
+  const value = {
+    navigate, currency, axios,
 
-    };
-    return (
-        <AppContext.Provider value={value}>
-            {children}
-        </AppContext.Provider>
-    )
-}
+    token, setToken: saveSession,
+    user,  setUser,
+    isOwner, setIsOwner,
+    logout,
+    showLogin, setShowLogin,
 
-export const useAppContext = ()=>{
+    // bikes & booking
+    bikes, setBikes, fetchBikes,
+    pickupDate, setPickupDate,
+    returnDate, setReturnDate,
+  };
 
-    return useContext(AppContext)
-}
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+};
+
+export const useAppContext = () => useContext(AppContext);
