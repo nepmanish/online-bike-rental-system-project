@@ -1,6 +1,7 @@
 const User = require('../models/usersModel');
 const Bike = require('../models/bikesModel');
 const Centroid = require('../models/centroidsModel');
+const AppError = require('./appError');
 
 function normalizeSingle(vec, min, max) {
   return vec.map((v, i) => (v - min[i]) / (max[i] - min[i] || 1));
@@ -10,15 +11,19 @@ function euclideanDistance(a, b) {
   return Math.sqrt(a.reduce((sum, val, i) => sum + Math.pow(val - b[i], 2), 0));
 }
 
-async function recommend(userId, limit = 5) {
+const recommend = async (userId, limit = 5) => {
   const user = await User.findById(userId);
-  if (!user) throw new Error('User not found');
+  if (!user) throw new AppError('User not found', 404);
 
-  if (!user.preferences || typeof user.preferences.price !== 'number') {
-    throw new Error('User preferences are missing or invalid');
+  if (
+    !user.preferences ||
+    typeof user.preferences.price !== 'number' ||
+    typeof user.preferences.engineCC !== 'number' ||
+    typeof user.preferences.weight !== 'number'
+  ) {
+    throw new AppError('User preferences are missing or invalid goto /users/setPreferences', 400);
   }
 
-  // Filter bikes with valid data
   const bikes = await Bike.find();
   const validBikes = bikes.filter(b =>
     typeof b.price === 'number' &&
@@ -26,12 +31,12 @@ async function recommend(userId, limit = 5) {
     typeof b.weight === 'number'
   );
 
-  if (validBikes.length === 0) throw new Error('No valid bikes to recommend');
+  if (validBikes.length === 0) throw new AppError('No valid bikes to recommend', 404);
 
   const points = validBikes.map(b => [b.price, b.engineCC, b.weight]);
 
   const centroids = await Centroid.find();
-  if (centroids.length === 0) throw new Error('No centroids found');
+  if (centroids.length === 0) throw new AppError('No centroids found', 500);
 
   const dims = points[0].length;
   const min = Array(dims).fill(Infinity);
@@ -62,10 +67,11 @@ async function recommend(userId, limit = 5) {
 
   await User.findByIdAndUpdate(userId, { clusterId: closest.clusterId });
 
-  return await Bike.find({ clusterId: closest.clusterId })
-    .sort({ price: 1 }) // or another criterion
+  const recommendations = await Bike.find({ clusterId: closest.clusterId })
+    .sort({ price: 1 })
     .limit(limit);
-}
+
+  return recommendations;
+};
 
 module.exports = { recommend };
-

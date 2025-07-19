@@ -17,11 +17,13 @@ router.patch('/updateMe', authController.protect, usersController.updateMe);
 router.delete('/deleteMe', authController.protect, usersController.deleteMe);
 
 router.get('/recommend', authController.protect, usersController.recommendBikes);
+router.patch('/preferences', authController.protect, usersController.setPreferences);
+
 
 router
   .route('/')
-  .get(authController.protect, authController.restrictedTo('admin'), usersController.getAllUsers)
-  .post(authController.protect, authController.restrictedTo('admin'), usersController.createUser);
+  .get(authController.protect, authController.restrictedTo('admin'), usersController.getAllUsers);
+  
 router
   .route('/:id')
   .get(authController.protect, authController.restrictedTo('admin'), usersController.getUser)

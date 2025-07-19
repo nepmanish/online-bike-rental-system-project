@@ -1,20 +1,23 @@
 const kmeans = require('node-kmeans');
 const Bike = require('../models/bikesModel');
 const Centroid = require('../models/centroidsModel');
+const AppError = require('./appError');
 
 function normalizePoints(points) {
   const dims = points[0].length;
-  const min = Array(dims).fill(Infinity);
-  const max = Array(dims).fill(-Infinity);
 
+  const min = Array(dims).fill(Infinity); // returns [Infinity, Infinity, Infinity]
+  const max = Array(dims).fill(-Infinity); // returns [-Infinity, -Infinity, -Infinity]
+
+  // find min and max for all feature dimensions
   points.forEach(pt =>
     pt.forEach((v, i) => {
-      if (typeof v !== 'number') throw new Error(`Non-numeric value: ${v}`);
       min[i] = Math.min(min[i], v);
       max[i] = Math.max(max[i], v);
     })
   );
 
+  // normalize using (value - min) / (max - min) — || 1 prevents divide-by-zero
   const normPoints = points.map(pt =>
     pt.map((v, i) => (v - min[i]) / (max[i] - min[i] || 1))
   );
@@ -22,54 +25,52 @@ function normalizePoints(points) {
   return { normPoints, min, max };
 }
 
-async function runClustering(k = 3) {
+const recluster = async (k = 3) => {
   const bikes = await Bike.find();
 
   if (bikes.length < k) {
-    console.log('Not enough bikes to cluster.');
-    return;
+    throw new AppError(`Need at least ${k} bikes to perform clustering`, 409);
   }
 
   const features = ['price', 'engineCC', 'weight'];
-  const rawPoints = bikes.map(bike =>
-    features.map(f => {
-      const val = bike[f];
-      if (typeof val !== 'number') throw new Error(`Invalid ${f} in bike`);
-      return val;
-    })
-  );
+  const rawPoints = bikes.map(bike => features.map(f => bike[f]));
 
   const { normPoints, min, max } = normalizePoints(rawPoints);
 
   return new Promise((resolve, reject) => {
     kmeans.clusterize(normPoints, { k }, async (err, results) => {
-      if (err) return reject(err);
+      if (err) return reject(new AppError('Clustering failed: ' + err.message, 500));
 
       try {
-        await Centroid.deleteMany({});
+        await Centroid.deleteMany({}); // remove previous centroids if any
 
         for (let i = 0; i < results.length; i++) {
-          const cluster = results[i];
+          const cluster = results[i]; // each cluster has centroid, cluster[], clusterInd[]
 
           await Centroid.create({
             clusterId: i,
             vector: cluster.centroid,
-            rawVector: cluster.centroid.map((v, j) => v * (max[j] - min[j]) + min[j]),
+            rawVector: cluster.centroid.map(
+              (v, j) => v * (max[j] - min[j]) + min[j] // denormalize to get original values
+            ),
           });
 
-          await Promise.all(cluster.clusterInd.map(async idx => {
-            bikes[idx].clusterId = i;
-            await bikes[idx].save();
-          }));
+          // assign bikes to the new cluster and save
+          await Promise.all(
+            cluster.clusterInd.map(async idx => {
+              bikes[idx].clusterId = i;
+              await bikes[idx].save();
+            })
+          );
         }
 
-        console.log(`Clustering complete: ${results.length} clusters created.`);
+        // clustering successful — resolve with number of clusters created
         resolve(results.length);
       } catch (e) {
-        reject(e);
+        reject(new AppError('Failed to save clustering results', 500));
       }
     });
   });
-}
+};
 
-module.exports = { runClustering };
+module.exports = { recluster };

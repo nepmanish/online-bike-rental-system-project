@@ -8,9 +8,9 @@ const router = express.Router();
 // router.param("id", bikesControllers.checkID);
 router
   .route('/top-5-cheap')
-  .get(bikesControllers.aliasTopBikes, bikesControllers.getAllBikes);
+  .get(authControllers.protect, bikesControllers.aliasTopBikes, bikesControllers.getAllBikes);
 
-router.route('/bike-stats').get(bikesControllers.getBikeStats);
+router.route('/bike-stats').get(authControllers.protect, bikesControllers.getBikeStats);
 
 router.post('/recluster', authControllers.protect, authControllers.restrictedTo('admin'), bikesControllers.reclusterBikes);
 
@@ -18,11 +18,11 @@ router.post('/recluster', authControllers.protect, authControllers.restrictedTo(
 router
   .route('/')
   .get(authControllers.protect, bikesControllers.getAllBikes)
-  .post(bikesControllers.createBike);
+  .post(authControllers.protect, authControllers.restrictedTo('admin'), bikesControllers.createBike);
 router
   .route('/:id')
-  .get(bikesControllers.getBike)
-  .patch(bikesControllers.updateBike)
+  .get(authControllers.protect, bikesControllers.getBike)
+  .patch(authControllers.protect, authControllers.restrictedTo('admin'), bikesControllers.updateBike)
   .delete(
     authControllers.protect,
     authControllers.restrictedTo('admin'),

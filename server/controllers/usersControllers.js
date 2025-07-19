@@ -1,7 +1,10 @@
+const mongoose = require('mongoose');
 const User = require('../models/usersModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const { recommend } = require('../utils/recommend');
+const validateAndFindUser = require('../utils/validateAndFindUser');
+const { findByIdAndDelete } = require('../models/centroidsModel');
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -58,41 +61,70 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createUser = (_req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'route not defined',
-  });
-};
+exports.getUser = catchAsync(async(req, res) => {
+    const { id } = req.body;
+    const user = await validateAndFindUser(id);
+    res.status(200).json({
+      status: 'success',
+      data: { user },
+    });
+});
 
-exports.getUser = (_req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'route not defined',
-  });
-};
+exports.updateUser = catchAsync(async(req, res) => {
+    const { id } = req.body;
+    const user = await validateAndFindUser(id);
+    user.name = req.body.name;
+    user.password = req.body.password;
+    user.passwordConfirm = req.body.passwordConfirm;
+    const updatedUser = await user.save();
+    res.status(200).json({
+      status: 'success',
+      data: { updatedUser },
+    });
+});
 
-exports.updateUser = (_req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'route not defined',
-  });
-};
+exports.deleteUser = catchAsync(async(req, res) => {
+    const { id } = req.body;
+    await findByIdAndDelete(id);
+    res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+});
 
-exports.deleteUser = (_req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'route not defined',
-  });
-};
+exports.setPreferences = catchAsync(async (req, res, next) => {
+      const { price, engineCC, weight } = req.body;
+      if(!price && !engineCC && !weight) {
+        return next(new AppError('please provide price, engineCC and weight you prefer', 400));
+      }
 
-exports.recommendBikes = catchAsync(async (req, res, next) => {
-    const bikes = await recommend(req.user.id);
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      {
+        'preferences.price': price,
+        'preferences.engineCC': engineCC,
+        'preferences.weight': weight,
+      },
+      { new: true, runValidators: true }
+    );
+      res.status(200).json({
+    status: 'success',
+    data: updatedUser,
+  });
+});
+
+exports.recommendBikes = exports.getRecommendations = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+  const limit = parseInt(req.query.limit) || 5;
+
+  const bikes = await recommend(userId, limit);
 
   res.status(200).json({
     status: 'success',
     results: bikes.length,
-    data: bikes,
+    data: {
+      bikes
+    }
   });
 });
 

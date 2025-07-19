@@ -49,15 +49,15 @@ const userSchema = new mongoose.Schema({
   preferences: {
     price: {
       type: Number,
-      required: [true, 'you must give your expected price of bike rental'],
+      // required: [true, 'you must give your expected price of bike rental'],
     },
     engineCC: {
       type: Number,
-      required: [true, 'you must give your favoured cc of bike'],
+      // required: [true, 'you must give your favoured cc of bike'],
     },
     weight: {
       type: Number,
-      required: [true, 'you must give you favoured weight of bike'],
+      // required: [true, 'you must give you favoured weight of bike'],
     },
   },
   clusterId: Number,

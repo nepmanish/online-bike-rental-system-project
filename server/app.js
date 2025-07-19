@@ -12,6 +12,7 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const bikesRouter = require('./routes/bikesRouter');
 const usersRouter = require('./routes/usersRouter');
+const bookingsRouter = require('./routes/bookingsRouter');
 
 const app = express();
 
@@ -30,20 +31,23 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-//body parser, reading datafrom body to req.body
-app.use(express.json());
-app.use(cookieParser());
-
 // CORS setup
 app.use(cors({
   origin: 'http://localhost:5173',
   credentials: true
 }));
 
+//body parser, reading datafrom body to req.body
+app.use(express.json());
+app.use(cookieParser());
+
+
 //data sanitization against nosql query
 app.use(mongoSanitize());
+
 //data sanitization against xss
 app.use(xss());
+
 //prevent parameter pollution
 app.use(
   hpp({
@@ -66,6 +70,8 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/bikes', bikesRouter);
 app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/bookings', bookingsRouter);
+
 
 app.all('*', (req, res, next) => {
   // const err = new Error(`Can't find ${req.originalUrl} in this server`);

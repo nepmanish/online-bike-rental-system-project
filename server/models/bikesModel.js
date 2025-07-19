@@ -69,6 +69,10 @@ const bikeSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isBooked: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: { virtuals: true },

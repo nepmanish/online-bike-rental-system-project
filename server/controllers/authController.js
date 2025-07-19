@@ -22,16 +22,16 @@ const createSendToken = (user, statusCode, res) => {
     httpOnly: true,
   };
 
-  if (process.env.NODE_ENV === 'production') {
-    cookieOptions.secure = true;
-  }
+  // if (process.env.NODE_ENV === 'production') {
+  //   cookieOptions.secure = true;
+  // }
 
   res.cookie('jwt', token, cookieOptions);
 
   user.password = undefined; //to not to show password when requested
   res.status(statusCode).json({
     status: 'success',
-    token,
+    // token,
     data: {
       user: user,
     },
@@ -43,15 +43,10 @@ exports.signup = catchAsync(async (req, res, next) => {
     //returns document as it was constructed on memory before .create() to save it to db. No query ran so select: false won't work
     name: req.body.name,
     email: req.body.email,
-    role: req.body.role,
+    // role: req.body.role,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
-    passwordChangedAt: req.body.passwordChangedAt,
-    preferences: {
-      price: req.body.preferences.price,
-      engineCC: req.body.preferences.engineCC,
-      weight: req.body.preferences.weight
-    },
+    // passwordChangedAt: req.body.passwordChangedAt,
   });
 
   createSendToken(newUser, 201, res);
@@ -74,13 +69,18 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.protect = catchAsync(async (req, res, next) => {
-  //1)getting token and check if its still there
+  //1.1)getting token and check if its still there
   let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
-    token = req.headers.authorization.split(' ')[1];
+  // if (
+  //   req.headers.authorization &&
+  //   req.headers.authorization.startsWith('Bearer')
+  // ) {
+  //   token = req.headers.authorization.split(' ')[1];
+  // }
+
+  //1.2) If not in header, try cookie
+  if (!token && req.cookies && req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
 
   if (!token) {

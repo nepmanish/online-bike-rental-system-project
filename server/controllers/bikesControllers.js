@@ -2,7 +2,7 @@ const Bike = require('../models/bikesModel');
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-const { runClustering } = require('../utils/recluster');
+const { recluster } = require('../utils/recluster');
 
 exports.aliasTopBikes = (req, res, next) => {
   req.query.limit = '5';
@@ -38,7 +38,7 @@ exports.getBike = catchAsync(async (req, res, next) => {
   const bike = await Bike.findById(req.params.id);
   //Bike.findOne({_id: req.params.id}) bts this happens
   if (!bike) {
-    return next(new AppError('no tour found with that ID', 404));
+    return next(new AppError('no bike found with that ID', 404));
   }
   res.status(200).json({
     status: 'success',
@@ -74,17 +74,18 @@ exports.deleteBike = catchAsync(async (req, res, next) => {
 exports.getBikeStats = catchAsync(async (req, res, next) => {
   const stats = await Bike.aggregate([
     {
-      $match: { ratingsAverage: { $gte: 4.5 } },
+      $match: { ratingsAverage: { $gte: 2 } },
     },
     {
       $group: {
-        _id: { $toUpper: '$engineCC' },
-        numTours: { $sum: 1 },
+        _id: { $toUpper: '$clusterId' },
+        numBikes: { $sum: 1 },
         numRatings: { $sum: '$ratingsQuantity' },
         avgRating: { $avg: '$ratingsAverage' },
         avgPrice: { $avg: '$price' },
         minPrice: { $min: '$price' },
         maxPrice: { $max: '$price' },
+        bikeNames: { $push: '$name' },
       },
     },
     {
@@ -100,20 +101,15 @@ exports.getBikeStats = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.reclusterBikes = async (req, res, next) => {
-  try {
-    const clusters = await runClustering(3);
+exports.reclusterBikes = catchAsync(async (req, res, next) => {
+  const k = parseInt(req.query.k) || 3; // optional dynamic k from query
 
-    res.status(200).json({
-      status: 'success',
-      message: `Reclustering completed. ${clusters} clusters formed.`,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      status: 'error',
-      message: 'Failed to recluster bikes',
-      error: err.message,
-    });
-  }
-};
+  const numClusters = await recluster(k); // runs clustering
+
+  res.status(200).json({
+    status: 'success',
+    message: `Clustering complete. ${numClusters} clusters created.`,
+  });
+});
+
+

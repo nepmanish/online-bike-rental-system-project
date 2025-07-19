@@ -2,8 +2,8 @@
   {
     "name": "Alice Sharma",
     "email": "alice.sharma@example.com",
-    "password": "securepass1",
-    "passwordConfirm": "securepass1",
+    "password": "Securepass1",
+    "passwordConfirm": "Securepass1",
     "preferences": {
       "price": 2000,
       "engineCC": 155,
