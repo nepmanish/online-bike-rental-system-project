@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { createBooking } from '../services/bookingService';
 import { getBikes } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const BookingForm = () => {
+  const { currentUser } = useAuth();
   const location = useLocation();
   const selectedBike = location.state?.selectedBike;
   

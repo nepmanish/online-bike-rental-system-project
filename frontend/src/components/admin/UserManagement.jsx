@@ -95,7 +95,7 @@ const UserManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {users.map(user => (
+            {(users || []).map(user => (
               <tr key={user._id} className="border-b">
                 <td className="py-3 px-4">{user.name}</td>
                 <td className="py-3 px-4">{user.email}</td>

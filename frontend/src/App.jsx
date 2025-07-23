@@ -11,6 +11,7 @@ import ProfilePage from './pages/ProfilePage';
 import RecommendationsPage from './pages/RecommendationsPage';
 import AdminDashboard from './pages/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
+import ErrorBoundary from './components/ErrorBoundary';
 import Footer from './components/Footer';
 import NewBooking from './pages/NewBooking';
 import MyBookings from './pages/MyBookings';
@@ -19,12 +20,13 @@ import BikeDetail from './pages/BikeDetail';
 
 function App() {
   return (
-    <AuthProvider>
-      {/* Removed Router wrapper */}
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <div className="flex-grow container mx-auto px-4 py-8">
-          <Routes>
+    <ErrorBoundary>
+      <AuthProvider>
+        {/* Removed Router wrapper */}
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+          <div className="flex-grow container mx-auto px-4 py-8">
+            <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/bikes" element={<BikesPage />} />
             <Route path="/bikes/:id" element={<BikeDetail />} />
@@ -60,11 +62,12 @@ function App() {
                 <UserPreferencesPage />
               </ProtectedRoute>
             } />
-          </Routes>
+            </Routes>
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
-    </AuthProvider>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

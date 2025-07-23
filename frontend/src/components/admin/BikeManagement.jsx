@@ -222,7 +222,7 @@ const BikeManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {bikes.map(bike => (
+            {(bikes || []).map(bike => (
               <tr key={bike._id} className="border-b">
                 <td className="py-3 px-4">{bike.name}</td>
                 <td className="py-3 px-4">{bike.engineCC}</td>

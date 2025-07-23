@@ -30,7 +30,7 @@ const BikesPage = () => {
     fetchBikes();
   }, []);
 
-  const filteredBikes = bikes.filter(bike => {
+  const filteredBikes = (bikes || []).filter(bike => {
     return (
       (filters.minPrice === '' || bike.price >= Number(filters.minPrice)) &&
       (filters.maxPrice === '' || bike.price <= Number(filters.maxPrice)) &&

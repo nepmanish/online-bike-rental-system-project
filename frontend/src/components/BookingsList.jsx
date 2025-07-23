@@ -40,8 +40,8 @@ const BookingsList = () => {
   };
 
   const filteredBookings = filter === 'all' 
-    ? bookings 
-    : bookings.filter(booking => booking.status === filter);
+    ? (bookings || []) 
+    : (bookings || []).filter(booking => booking.status === filter);
 
   return (
     <div className="max-w-4xl mx-auto p-6">
