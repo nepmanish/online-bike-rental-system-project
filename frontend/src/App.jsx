@@ -65,6 +65,7 @@ function App() {
             </Routes>
           </div>
           <Footer />
+
         </div>
       </AuthProvider>
     </ErrorBoundary>

@@ -79,6 +79,13 @@ const RecommendationsPage = () => {
             >
               Set Your Preferences
             </Link>
+
+            <a 
+              href="/preferences" 
+              className="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition"
+            >
+              Set Your Preferences
+            </a>
             <p className="text-gray-600">
               Set your preferences to get personalized bike recommendations
             </p>

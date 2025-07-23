@@ -24,6 +24,8 @@ const BookingsList = () => {
         }
       } catch (err) {
         console.error('Booking fetch error:', err);
+        setBookings(response.data.bookings || []);
+      } catch (err) {
         setError(err.response?.data?.message || err.message || 'Failed to load bookings');
       } finally {
         setLoading(false);
