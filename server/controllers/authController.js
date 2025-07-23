@@ -42,9 +42,11 @@ exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
+    phone: req.body.phone,
+    licenseNumber: req.body.licenseNumber,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
-    preferences: req.body.preferences // ADDED PREFERENCES
+    preferences: req.body.preferences
   });
 
   createSendToken(newUser, 201, res);

@@ -28,6 +28,14 @@ const bookingSchema = new mongoose.Schema({
     type: Date,
     required: [true, 'Please provide end date'],
   },
+  phone: {
+    type: String,
+    required: [true, 'Phone number is required for booking'],
+  },
+  licenseNumber: {
+    type: String,
+    required: [true, 'License number is required for booking'],
+  },
   rating: {
     type: Number,
     min: 1,
