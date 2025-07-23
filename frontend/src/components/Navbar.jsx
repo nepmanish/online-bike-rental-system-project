@@ -27,6 +27,7 @@ const Navbar = () => {
               <>
                 <Link to="/bikes" className="hover:text-blue-300 transition">Bikes</Link>
                 <Link to="/recommendations" className="hover:text-blue-300 transition">Recommendations</Link>
+                <Link to="/preferences" className="hover:text-blue-300 transition">Preferences</Link>
                 <Link to="/new-booking" className="hover:text-blue-300 transition">Book a Bike</Link>
                 <Link to="/my-bookings" className="hover:text-blue-300 transition">My Bookings</Link>
                 

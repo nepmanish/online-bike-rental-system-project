@@ -78,7 +78,7 @@ export const getBikeStats = async () => {
 // ==============================
 
 export const updateUserPreferences = async (userId, preferences) => {
-  const response = await api.patch(`/users/${userId}`, { preferences });
+  const response = await api.patch('/users/preferences', { preferences });
   return response.data.data.user;
 };
 

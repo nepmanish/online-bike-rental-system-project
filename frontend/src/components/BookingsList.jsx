@@ -11,10 +11,10 @@ const BookingsList = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const { data } = await getUserBookings();
-        setBookings(data.data.bookings);
+        const response = await getUserBookings();
+        setBookings(response.data.bookings || []);
       } catch (err) {
-        setError(err.message || 'Failed to load bookings');
+        setError(err.response?.data?.message || err.message || 'Failed to load bookings');
       } finally {
         setLoading(false);
       }

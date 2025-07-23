@@ -17,14 +17,31 @@ const HomePage = () => {
           <p className="text-xl mb-10 max-w-2xl mx-auto">
             Discover the best bikes for your adventure with our personalized recommendations
           </p>
-          <div className="flex justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
             {currentUser ? (
-              <Link 
-                to="/recommendations" 
-                className="bg-white text-blue-900 px-8 py-3 rounded-full font-semibold text-lg hover:bg-blue-100 transition"
-              >
-                Get Recommendations
-              </Link>
+              <>
+                {currentUser.preferences ? (
+                  <Link 
+                    to="/recommendations" 
+                    className="bg-white text-blue-900 px-8 py-3 rounded-full font-semibold text-lg hover:bg-blue-100 transition"
+                  >
+                    Get Recommendations
+                  </Link>
+                ) : (
+                  <Link 
+                    to="/preferences" 
+                    className="bg-white text-blue-900 px-8 py-3 rounded-full font-semibold text-lg hover:bg-blue-100 transition"
+                  >
+                    Set Your Preferences
+                  </Link>
+                )}
+                <Link 
+                  to="/new-booking" 
+                  className="bg-green-600 text-white px-8 py-3 rounded-full font-semibold text-lg hover:bg-green-700 transition"
+                >
+                  Book Now
+                </Link>
+              </>
             ) : (
               <Link 
                 to="/signup" 

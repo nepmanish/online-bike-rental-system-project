@@ -71,9 +71,17 @@ const RecommendationsPage = () => {
           <FaExclamationTriangle className="text-red-500 text-4xl mx-auto mb-4" />
           <h2 className="text-xl font-bold text-red-800 mb-2">Recommendations Unavailable</h2>
           <p className="text-red-700 mb-4">{error}</p>
-          <p className="text-gray-600">
-            Try updating your preferences in your profile
-          </p>
+          <div className="space-y-3">
+            <a 
+              href="/preferences" 
+              className="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition"
+            >
+              Set Your Preferences
+            </a>
+            <p className="text-gray-600">
+              Set your preferences to get personalized bike recommendations
+            </p>
+          </div>
         </div>
       </div>
     );

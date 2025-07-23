@@ -35,7 +35,7 @@ exports.createBooking = catchAsync(async (req, res, next) => {
     endDate,
     rating,
     comment,
-    status: 'booked',
+    status: 'active',
   });
 
   // Mark bike as booked
@@ -44,7 +44,7 @@ exports.createBooking = catchAsync(async (req, res, next) => {
   // Recalculate ratings
   const allRatings = await Booking.find({
     bike: bikeId,
-      status: 'booked',
+    status: 'active',
     rating: { $ne: null },
   });
 
@@ -74,7 +74,7 @@ exports.cancelBooking = catchAsync(async (req, res, next) => {
 
   if (!booking) return next(new AppError('Booking not found', 404));
 
-  if (booking.status === 'available') {
+  if (booking.status === 'cancelled') {
     return next(new AppError('Booking already cancelled', 400));
   }
 
@@ -89,7 +89,7 @@ exports.cancelBooking = catchAsync(async (req, res, next) => {
   }
 
   // Mark booking as cancelled
-  booking.status = 'available';
+  booking.status = 'cancelled';
   await booking.save();
 
   const bike = await Bike.findById(booking.bike._id);
@@ -99,7 +99,7 @@ exports.cancelBooking = catchAsync(async (req, res, next) => {
     // Recalculate ratings excluding cancelled bookings
     const validRatings = await Booking.find({
       bike: bike._id,
-      status: 'booked',
+      status: 'active',
       rating: { $exists: true, $ne: null }
     });
 
@@ -131,6 +131,54 @@ exports.getMyBookings = catchAsync(async (req, res, next) => {
     results: bookings.length,
     data: {
       bookings,
+    },
+  });
+});
+
+// Admin functions
+exports.getAllBookings = catchAsync(async (req, res, next) => {
+  const bookings = await Booking.find().sort({ bookedAt: -1 });
+
+  res.status(200).json({
+    status: 'success',
+    results: bookings.length,
+    data: {
+      bookings,
+    },
+  });
+});
+
+exports.updateBookingStatus = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  if (!['active', 'cancelled', 'completed'].includes(status)) {
+    return next(new AppError('Invalid booking status', 400));
+  }
+
+  const booking = await Booking.findById(id);
+  if (!booking) {
+    return next(new AppError('Booking not found', 404));
+  }
+
+  booking.status = status;
+  await booking.save();
+
+  // Update bike availability based on booking status
+  const bike = await Bike.findById(booking.bike._id);
+  if (bike) {
+    if (status === 'cancelled' || status === 'completed') {
+      bike.isBooked = false;
+    } else if (status === 'active') {
+      bike.isBooked = true;
+    }
+    await bike.save({ validateBeforeSave: false });
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      booking,
     },
   });
 });

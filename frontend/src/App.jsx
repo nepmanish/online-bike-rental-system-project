@@ -14,6 +14,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Footer from './components/Footer';
 import NewBooking from './pages/NewBooking';
 import MyBookings from './pages/MyBookings';
+import UserPreferencesPage from './pages/UserPreferencesPage';
+import BikeDetail from './pages/BikeDetail';
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/bikes" element={<BikesPage />} />
+            <Route path="/bikes/:id" element={<BikeDetail />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/profile" element={
@@ -50,6 +53,11 @@ function App() {
             <Route path="/my-bookings" element={
               <ProtectedRoute>
                 <MyBookings />
+              </ProtectedRoute>
+            } />
+            <Route path="/preferences" element={
+              <ProtectedRoute>
+                <UserPreferencesPage />
               </ProtectedRoute>
             } />
           </Routes>

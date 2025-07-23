@@ -1,5 +1,16 @@
 import api from './api';
 
-export const createBooking = (data) => api.post('/bookings', data);
-export const cancelBooking = (id) => api.patch(`/bookings/cancel/${id}`);
-export const getUserBookings = () => api.get('/bookings/my-bookings');
+export const createBooking = async (data) => {
+  const response = await api.post('/bookings', data);
+  return response.data;
+};
+
+export const cancelBooking = async (id) => {
+  const response = await api.patch(`/bookings/cancel/${id}`);
+  return response.data;
+};
+
+export const getUserBookings = async () => {
+  const response = await api.get('/bookings');
+  return response.data;
+};
