@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { createBooking } from '../services/bookingService';
-import { getAvailableBikes } from '../services/bikeService';
+import { getBikes } from '../services/api';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
 const BookingForm = () => {
+  const location = useLocation();
+  const selectedBike = location.state?.selectedBike;
+  
   const [formData, setFormData] = useState({
-    bikeId: '',
+    bikeId: selectedBike?._id || '',
     pickupLocation: '',
     dropLocation: '',
     startDate: null,
@@ -21,8 +24,10 @@ const BookingForm = () => {
   useEffect(() => {
     const fetchBikes = async () => {
       try {
-        const { data } = await getAvailableBikes();
-        setBikes(data.data.bikes);
+        const data = await getBikes();
+        // Filter only available bikes
+        const availableBikes = data.filter(bike => !bike.isBooked);
+        setBikes(availableBikes);
       } catch (err) {
         setError(err.message || 'Failed to load bikes');
       }
@@ -56,15 +61,18 @@ const BookingForm = () => {
     setIsSubmitting(true);
     try {
       const bookingData = {
-        ...formData,
+        bikeId: formData.bikeId,
+        pickupLocation: formData.pickupLocation,
+        dropLocation: formData.dropLocation,
         startDate: formData.startDate.toISOString(),
         endDate: formData.endDate.toISOString()
       };
       
-      await createBooking(bookingData);
+      const response = await createBooking(bookingData);
+      alert('Booking created successfully!');
       navigate('/my-bookings');
     } catch (err) {
-      setError(err.message || 'Booking creation failed');
+      setError(err.response?.data?.message || err.message || 'Booking creation failed');
     } finally {
       setIsSubmitting(false);
     }
@@ -94,13 +102,18 @@ const BookingForm = () => {
   {bikes && bikes.length > 0 ? (
     bikes.map(bike => (
       <option key={bike._id} value={bike._id}>
-        {bike.model} - {bike.color} (${bike.price}/hr)
+        {bike.name} - {bike.engineCC}cc (NRs{bike.price}/day)
       </option>
     ))
   ) : (
     <option disabled>No bikes available</option>
   )}
 </select>
+          {selectedBike && (
+            <p className="mt-2 text-sm text-green-600">
+              Pre-selected: {selectedBike.name} - {selectedBike.engineCC}cc
+            </p>
+          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">

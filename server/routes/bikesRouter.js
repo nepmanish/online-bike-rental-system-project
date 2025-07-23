@@ -17,11 +17,11 @@ router.post('/recluster', authControllers.protect, authControllers.restrictedTo(
 
 router
   .route('/')
-  .get(authControllers.protect, bikesControllers.getAllBikes)
+  .get(bikesControllers.getAllBikes)
   .post(authControllers.protect, authControllers.restrictedTo('admin'), bikesControllers.createBike);
 router
   .route('/:id')
-  .get(authControllers.protect, bikesControllers.getBike)
+  .get(bikesControllers.getBike)
   .patch(authControllers.protect, authControllers.restrictedTo('admin'), bikesControllers.updateBike)
   .delete(
     authControllers.protect,

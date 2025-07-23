@@ -5,7 +5,8 @@ import BikeManagement from '../components/admin/BikeManagement';
 import UserManagement from '../components/admin/UserManagement';
 import ClusterManagement from '../components/admin/ClusterManagement';
 import SystemAnalytics from '../components/admin/SystemAnalytics';
-import { FaBicycle, FaUsers, FaChartPie, FaChartBar } from 'react-icons/fa';
+import BookingManagement from '../components/admin/BookingManagement';
+import { FaBicycle, FaUsers, FaChartPie, FaChartBar, FaCalendarAlt } from 'react-icons/fa';
 
 const AdminDashboard = () => {
   const { currentUser } = useAuth();
@@ -22,6 +23,8 @@ const AdminDashboard = () => {
         return <BikeManagement />;
       case 'users':
         return <UserManagement />;
+      case 'bookings':
+        return <BookingManagement />;
       case 'clusters':
         return <ClusterManagement />;
       case 'analytics':
@@ -73,6 +76,17 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab('users')}
           >
             <FaUsers className="mr-2" /> User Management
+          </button>
+          
+          <button
+            className={`px-6 py-4 flex items-center ${
+              activeTab === 'bookings'
+                ? 'border-b-2 border-blue-600 text-blue-600'
+                : 'text-gray-600 hover:text-blue-600'
+            }`}
+            onClick={() => setActiveTab('bookings')}
+          >
+            <FaCalendarAlt className="mr-2" /> Booking Management
           </button>
           
           <button

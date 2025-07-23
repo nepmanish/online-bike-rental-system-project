@@ -37,7 +37,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     );
   }
   //2) filter out unwanted fields names that are not allowed to be updated
-  const filteredBody = filterObj(req.body, 'name', 'email');
+  const filteredBody = filterObj(req.body, 'name', 'email', 'preferences');
   //3)update user document
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
@@ -61,9 +61,14 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getUser = catchAsync(async(req, res) => {
-    const { id } = req.body;
-    const user = await validateAndFindUser(id);
+exports.getUser = catchAsync(async(req, res, next) => {
+    const id = req.params.id;
+    const user = await User.findById(id);
+    
+    if (!user) {
+      return next(new AppError('User not found', 404));
+    }
+    
     res.status(200).json({
       status: 'success',
       data: { user },
@@ -110,6 +115,27 @@ exports.setPreferences = catchAsync(async (req, res, next) => {
       res.status(200).json({
     status: 'success',
     data: updatedUser,
+  });
+});
+
+exports.setPreferences = catchAsync(async (req, res, next) => {
+  const { preferences } = req.body;
+  
+  if (!preferences || typeof preferences !== 'object') {
+    return next(new AppError('Please provide valid preferences', 400));
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user.id, 
+    { preferences }, 
+    { new: true, runValidators: true }
+  );
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: updatedUser,
+    },
   });
 });
 
