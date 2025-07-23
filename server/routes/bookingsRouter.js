@@ -1,3 +1,4 @@
+
 const express = require('express');
 const bookingController = require('../controllers/bookingsController');
 const authController = require('../controllers/authController');
@@ -9,5 +10,7 @@ router.use(authController.protect);
 
 router.post('/', bookingController.createBooking);
 router.patch('/cancel/:id', bookingController.cancelBooking);
+router.get('/', bookingController.getMyBookings);
 
 module.exports = router;
+

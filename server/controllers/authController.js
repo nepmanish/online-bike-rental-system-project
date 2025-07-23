@@ -40,13 +40,11 @@ const createSendToken = (user, statusCode, res) => {
 
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
-    //returns document as it was constructed on memory before .create() to save it to db. No query ran so select: false won't work
     name: req.body.name,
     email: req.body.email,
-    // role: req.body.role,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
-    // passwordChangedAt: req.body.passwordChangedAt,
+    preferences: req.body.preferences // ADDED PREFERENCES
   });
 
   createSendToken(newUser, 201, res);

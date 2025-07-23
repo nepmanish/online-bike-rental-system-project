@@ -1,3 +1,4 @@
+
 const express = require('express');
 const authController = require('../controllers/authController');
 const usersController = require('../controllers/usersControllers');
@@ -26,8 +27,9 @@ router
   
 router
   .route('/:id')
-  .get(authController.protect, authController.restrictedTo('admin'), usersController.getUser)
-  .patch(authController.protect, authController.restrictedTo('admin'), usersController.updateUser)
-  .delete(authController.protect, authController.restrictedTo('admin'), usersController.deleteUser);
+  .get(authController.protect, authController.restrictedTo('admin'), usersController.getUser);
+  // .patch(authController.protect, authController.restrictedTo('admin'), usersController.updateUser)
+  // .delete(authController.protect, authController.restrictedTo('admin'), usersController.deleteUser);
 
 module.exports = router;
+

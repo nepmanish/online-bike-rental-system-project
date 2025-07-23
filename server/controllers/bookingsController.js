@@ -1,3 +1,4 @@
+
 const Booking = require('../models/bookingsModel');
 const Bike = require('../models/bikesModel');
 const AppError = require('../utils/appError');
@@ -34,6 +35,7 @@ exports.createBooking = catchAsync(async (req, res, next) => {
     endDate,
     rating,
     comment,
+    status: 'booked',
   });
 
   // Mark bike as booked
@@ -42,7 +44,8 @@ exports.createBooking = catchAsync(async (req, res, next) => {
   // Recalculate ratings
   const allRatings = await Booking.find({
     bike: bikeId,
-    rating: { $exists: true },
+      status: 'booked',
+    rating: { $ne: null },
   });
 
   const ratingsQuantity = allRatings.length;
@@ -67,18 +70,18 @@ exports.createBooking = catchAsync(async (req, res, next) => {
 
 // Cancel an existing booking
 exports.cancelBooking = catchAsync(async (req, res, next) => {
-  const booking = await Booking.findById(req.params.id).populate('bike');
+  const booking = await Booking.findById(req.params.id);
 
   if (!booking) return next(new AppError('Booking not found', 404));
 
-  if (booking.status === 'cancelled') {
+  if (booking.status === 'available') {
     return next(new AppError('Booking already cancelled', 400));
   }
 
   // Only booking owner or admin can cancel
   if (
     req.user.role !== 'admin' &&
-    booking.user._id.toString() !== req.user._id.toString()
+    booking.user.toString() !== req.user.id.toString()
   ) {
     return next(
       new AppError('You can only cancel your own bookings', 403)
@@ -86,7 +89,7 @@ exports.cancelBooking = catchAsync(async (req, res, next) => {
   }
 
   // Mark booking as cancelled
-  booking.status = 'cancelled';
+  booking.status = 'available';
   await booking.save();
 
   const bike = await Bike.findById(booking.bike._id);
@@ -96,8 +99,8 @@ exports.cancelBooking = catchAsync(async (req, res, next) => {
     // Recalculate ratings excluding cancelled bookings
     const validRatings = await Booking.find({
       bike: bike._id,
-      status: 'active',
-      rating: { $exists: true },
+      status: 'booked',
+      rating: { $exists: true, $ne: null }
     });
 
     const ratingsQuantity = validRatings.length;
@@ -118,3 +121,17 @@ exports.cancelBooking = catchAsync(async (req, res, next) => {
     message: 'Booking cancelled successfully',
   });
 });
+
+
+exports.getMyBookings = catchAsync(async (req, res, next) => {
+  const bookings = await Booking.find({ user: req.user.id });
+
+  res.status(200).json({
+    status: 'success',
+    results: bookings.length,
+    data: {
+      bookings,
+    },
+  });
+});
+
