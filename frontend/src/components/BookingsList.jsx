@@ -12,8 +12,18 @@ const BookingsList = () => {
     const fetchBookings = async () => {
       try {
         const response = await getUserBookings();
-        setBookings(response.data.bookings || []);
+        // Handle different response structures
+        if (response.data && response.data.bookings) {
+          setBookings(response.data.bookings);
+        } else if (response.bookings) {
+          setBookings(response.bookings);
+        } else if (Array.isArray(response)) {
+          setBookings(response);
+        } else {
+          setBookings([]);
+        }
       } catch (err) {
+        console.error('Booking fetch error:', err);
         setError(err.response?.data?.message || err.message || 'Failed to load bookings');
       } finally {
         setLoading(false);

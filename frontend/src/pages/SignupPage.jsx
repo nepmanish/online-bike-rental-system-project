@@ -8,10 +8,12 @@ const SignupPage = () => {
     email: '',
     password: '',
     passwordConfirm: '',
+    phone: '',
+    licenseNumber: '',
     preferences: {
-      price: 0,
-      engineCC: 0,
-      weight: 0
+      price: 1000,
+      engineCC: 150,
+      weight: 140
     }
   });
   const [error, setError] = useState('');
@@ -118,6 +120,38 @@ const SignupPage = () => {
                 required
                 value={userData.email}
                 onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                Phone Number
+              </label>
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                required
+                value={userData.phone}
+                onChange={handleChange}
+                placeholder="+977-9xxxxxxxxx"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="licenseNumber" className="block text-sm font-medium text-gray-700">
+                License Number
+              </label>
+              <input
+                id="licenseNumber"
+                name="licenseNumber"
+                type="text"
+                required
+                value={userData.licenseNumber}
+                onChange={handleChange}
+                placeholder="Enter your driving license number"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
             </div>

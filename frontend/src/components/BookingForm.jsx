@@ -14,7 +14,9 @@ const BookingForm = () => {
     pickupLocation: '',
     dropLocation: '',
     startDate: null,
-    endDate: null
+    endDate: null,
+    phone: currentUser?.phone || '',
+    licenseNumber: currentUser?.licenseNumber || ''
   });
   const [bikes, setBikes] = useState([]);
   const [error, setError] = useState('');
@@ -65,7 +67,9 @@ const BookingForm = () => {
         pickupLocation: formData.pickupLocation,
         dropLocation: formData.dropLocation,
         startDate: formData.startDate.toISOString(),
-        endDate: formData.endDate.toISOString()
+        endDate: formData.endDate.toISOString(),
+        phone: formData.phone,
+        licenseNumber: formData.licenseNumber
       };
       
       const response = await createBooking(bookingData);
@@ -139,6 +143,34 @@ const BookingForm = () => {
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter drop address"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label className="block text-gray-700 mb-2">Phone Number</label>
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Your phone number"
+              required
+            />
+          </div>
+          
+          <div>
+            <label className="block text-gray-700 mb-2">License Number</label>
+            <input
+              type="text"
+              name="licenseNumber"
+              value={formData.licenseNumber}
+              onChange={handleChange}
+              className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Your license number"
               required
             />
           </div>

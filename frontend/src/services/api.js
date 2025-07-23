@@ -56,11 +56,17 @@ export const deleteBike = async (bikeId) => {
 export const getBikeRecommendations = async () => {
   try {
     const response = await api.get('/users/recommend');
-    // Ensure we always return an array
-    return response.data.data || [];
+    // Handle different response structures
+    if (response.data.data && response.data.data.bikes) {
+      return response.data.data.bikes;
+    } else if (response.data.data) {
+      return Array.isArray(response.data.data) ? response.data.data : [];
+    } else {
+      return [];
+    }
   } catch (error) {
     console.error('Error getting recommendations:', error);
-    return []; // Return empty array on error
+    throw new Error(error.message || 'Failed to get recommendations. Please set your preferences first.');
   }
 };
 export const reclusterBikes = async (k = 3) => {
@@ -84,7 +90,7 @@ export const updateUserPreferences = async (userId, preferences) => {
 
 export const getUsers = async () => {
   const response = await api.get('/users');
-  return response.data.data;
+  return response.data;
 };
 
 export const updateUser = async (userId, data) => {

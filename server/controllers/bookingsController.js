@@ -12,6 +12,8 @@ exports.createBooking = catchAsync(async (req, res, next) => {
     dropLocation,
     startDate,
     endDate,
+    phone,
+    licenseNumber,
     rating,
     comment,
   } = req.body;
@@ -33,6 +35,8 @@ exports.createBooking = catchAsync(async (req, res, next) => {
     dropLocation,
     startDate,
     endDate,
+    phone,
+    licenseNumber,
     rating,
     comment,
     status: 'active',

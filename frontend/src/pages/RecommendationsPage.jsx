@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import BikeCard from '../components/BikeCard';
 import { getBikeRecommendations } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -72,12 +73,12 @@ const RecommendationsPage = () => {
           <h2 className="text-xl font-bold text-red-800 mb-2">Recommendations Unavailable</h2>
           <p className="text-red-700 mb-4">{error}</p>
           <div className="space-y-3">
-            <a 
-              href="/preferences" 
+            <Link 
+              to="/preferences" 
               className="inline-block bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition"
             >
               Set Your Preferences
-            </a>
+            </Link>
             <p className="text-gray-600">
               Set your preferences to get personalized bike recommendations
             </p>

@@ -38,10 +38,10 @@ export function AuthProvider({ children }) {
     setCurrentUser(data.data.user);
   };
 
-  const signup = async (name, email, password, passwordConfirm) => {
+  const signup = async (userData) => {
     const { data } = await api.post(
       '/users/signup',
-      { name, email, password, passwordConfirm },
+      userData,
       { withCredentials: true }
     );
     setCurrentUser(data.data.user);
